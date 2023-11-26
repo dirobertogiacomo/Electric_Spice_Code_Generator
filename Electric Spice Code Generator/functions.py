@@ -277,6 +277,7 @@ def PWL_propagation_time(propagation_transitions, input_variables, output_variab
     V_one = VDD 
     # header
     header = 'PWL('
+    header_time = '.meas tran'
 
     delta_t = '+' + T
     t_RF = '+' + T_RF
@@ -295,6 +296,7 @@ def PWL_propagation_time(propagation_transitions, input_variables, output_variab
             # initialising spice code
             spice_code = 'V' + input_variables[var] + ' ' + input_variables[var] + ' GND ' 
             not_spice_code = 'Vnot' + input_variables[var] + ' not' + input_variables[var] + ' GND '
+            
             
             # initialising PWL 
             PWL = header + '0'
@@ -347,6 +349,15 @@ def PWL_propagation_time(propagation_transitions, input_variables, output_variab
         with open(title, 'a') as file:
             file.write(simulation)
             file.write('\n')
+
+    # measure
+    t_P_HL = header_time + ' tp_inH_outL trig v(X)=2.5 rise=1 targ v(' + output_variable + ')=2.5 fall=1'  
+    t_P_LH = header_time + ' tp_inL_outH trig v(X)=2.5 fall=1 targ v(' + output_variable + ')=2.5 rise=1'
+    
+    with open(title, 'a') as file:
+        file.write(t_P_HL + '\n')
+        file.write(t_P_LH + '\n')
+        file.write('\n')
 
 def print_everything(logic_function, input_variables, output_variable):
     # Generate the truth table
